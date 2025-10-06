@@ -1,0 +1,89 @@
+```{r}
+#install.packages("tidyverse")
+#library(tidyverse)
+
+```
+
+```{r}
+diamonddata = diamonds
+```
+Question 1: How many rows are in this dataset? Answer: 53940
+
+Question 2: How many columns are in the diamonds dataset? Answer: 10
+
+```{r}
+ggplot(diamonddata, aes(x = carat, y = price)) +
+  geom_point(alpha = 0.3) + 
+  labs(title = "Relationship Between Carat and Price of Diamonds",
+       x = "Carat",
+       y = "Price (USD)") +
+  theme_minimal()
+```
+
+Question 3: B
+
+```{r}
+ggplot(diamonddata, aes(x = carat, y = price, color = cut)) +
+  geom_point(alpha = 0.3) +
+  labs(title = "Carat vs Price colored by Cut",
+       x = "Carat", y = "Price (USD)", color = "Cut") +
+  theme_minimal()
+```
+Question 4: A
+
+
+```{r}
+ggplot(diamonddata, aes(x = carat, y = price, color = cut)) +
+  geom_point(alpha = 0.3) +
+  facet_wrap(~ color) +
+  labs(title = "Carat vs Price by Diamond Color",
+       x = "Carat", y = "Price (USD)", color = "Cut") +
+  theme_minimal()
+
+```
+
+Question 5: C Color
+
+```{r}
+inventory <- read_csv("InventoryData.csv")
+```
+Question 6: D character
+
+```{r}
+mean_on_hand <- inventory |>
+  summarize(mean_on_hand = mean(`On Hand`, na.rm = TRUE))
+mean_on_hand
+
+```
+Question 7: 100.53
+
+```{r}
+inventoryA <- inventory |>
+  filter(Supplier == "A")
+
+nrow(inventoryA)
+
+```
+
+Question 8: 3695
+
+```{r}
+inventoryA <- mutate(inventoryA, OnHandRatio = `On Hand` / `Annual Demand`)
+
+```
+
+Question 9: B 
+
+```{r}
+avg_cost <- inventoryA |>
+  group_by(`Item SKU`) |>
+  summarize(SKUAvgCost = mean(`Cost per Unit ($)`, na.rm = TRUE), .groups = "drop")
+
+avg_cost
+
+# Extract SKU 011's average:
+avg_cost |>
+  filter(`Item SKU` == "011")
+
+```
+Question 10: 12.33
