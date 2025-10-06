@@ -1,0 +1,49 @@
+```{r}
+library(tidyverse)
+library(tidymodels)
+library(glmnet)
+library(GGally)
+library(ggcorrplot)
+library(MASS)
+library(car)
+library(lubridate)
+library(lmtest)
+library(splines)
+```
+
+```{r}
+bike <- read_csv("bike_cleaned-4.csv")
+```
+
+```{r}
+bike = bike %>% mutate(dteday = mdy(dteday))
+bike = bike %>% mutate_if(is.character, as_factor)
+bike = bike %>% mutate(hr = as_factor(hr))
+```
+
+```{r}
+set.seed(1234)
+bike_split = initial_split(bike, prop = 0.70, strata = count)
+train = training(bike_split)
+test= testing(bike_split)
+```
+
+```{r}
+# Build the linear regression model
+lm_model <- lm(count ~ season + mnth + hr + holiday + weekday + temp + weathersit, 
+               data = train)
+
+# View model summary
+summary(lm_model)
+```
+
+```{r}
+# Generate predictions on the testing set
+test_pred <- predict(lm_model, newdata = test)
+
+# Calculate R-squared on the testing set
+rsq_test <- cor(test$count, test_pred)^2
+rsq_test
+
+```
+
